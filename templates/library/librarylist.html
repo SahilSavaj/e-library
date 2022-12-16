@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{%load static %}
+{% block content %}
+<script src="{%static 'librarylist.js'%}"></script>
+    <script>
+      
+        window.onload=function(){
+            x={{data|safe}}
+            if (x.length<1){
+              msg_box=document.getElementById('message');
+              msg_box.style.display='inline';
+              msg_box.innerText="Oops.! There isn't any PDF available yet. Return after some time, and if the issue remains the same, contact us.";
+            }
+            else{
+              renderPdf(x);  
+            }
+            
+        };  
+    </script>
+  <!--Main layout-->
+    <!--<div class="form-outline">
+      <input type="search" class="form-control rounded" id="search" placeholder="Search for Books"/>
+    </div>-->
+  <main class="mt-5" >
+    
+    <div class="container">
+
+      <!--Section: Content-->
+      <div id='message' style='display:None;'></div>
+      <section>
+        <div class="row align-items-center justify-content-center" id="pdfCardImg">
+        </div>
+      </section>
+      <!--Section: Content-->
+       
+
+    </div>
+    
+  </main>
+  <!--Main layout-->
+    
+{% endblock %}

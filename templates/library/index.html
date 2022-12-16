@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{%load static %}
+{% block content %}
+  <!--Main layout-->
+  <main class="mt-5">
+    <div class="container">
+
+      <!--Section: Content-->
+      <section>
+        <div class="row d-flex align-items-center justify-content-center">
+          <div class="col-md-5 gx-0 mb-5">
+            <div class="bg-image hover-overlay ripple shadow-2-strong rounded-5" data-mdb-ripple-color="light">
+              <img src="{%static 'bg.jpg' %}" class="img-fluid" height="400" width="500"/>
+            </div>
+          </div>
+
+          <div class="col-md-5 gx-5 mb-4">
+            <h4 style="font-size:30px"><strong>Open Source of Library</strong></h4>
+            <p class="text-white-50" style="font-size:20px">
+              Free Source of all kind of notes students require to prepare for their Exams.
+              Prepare yourself with no charges for any subjects available.!
+            </p>
+          </div>
+        </div>
+      </section>
+      <!--Section: Content-->
+
+      <!--Section: Content-->
+      <section>
+        <div class="row d-flex align-items-center justify-content-center">
+            <div class="col-md-5 gx-5 mb-5">
+                <h4 style="font-size:30px"><strong>Prepare yourself from best Notes</strong></h4>
+                <p class="text-white-50" style="font-size:20px">
+                Hand Written and refered notes by large number of students.
+                </p>
+            </div>
+
+          <div class="col-md-5 gx-0 mb-5">
+                <div class="bg-image hover-overlay ripple shadow-2-strong rounded-5" data-mdb-ripple-color="light">
+                    <img src="{%static 'study.jpg' %}" class="img-fluid" height="400" width="500"/>
+                </div>
+          </div>
+        </div>
+      </section>
+      <!--Section: Content-->
+
+      <!--Section: Content-->
+      <section>
+        <div class="row d-flex align-items-center justify-content-center">
+          <div class="col-md-5 gx-0 mb-5">
+            <div class="bg-image hover-overlay ripple shadow-2-strong rounded-5" data-mdb-ripple-color="light">
+              <img src="{%static 'tablet-large.jpg' %}" class="img-fluid" height="400" width="500"/>
+            </div>
+          </div>
+
+          <div class="col-md-5 gx-5 mb-4">
+            <h4><strong style="font-size:30px">Can Study from anywhere at anytime</strong></h4>
+            <p class="text-white-50" style="font-size:20px">
+              
+            Access resources from anywhere, anytime from any device..!
+            </p>
+          </div>
+        </div>
+      </section>
+      <!--Section: Content-->
+
+    </div>
+  </main>
+  <!--Main layout-->
+
+{% endblock %}

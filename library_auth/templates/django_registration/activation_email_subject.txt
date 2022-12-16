@@ -1,0 +1,2 @@
+Activate your Library account! You have {{ expiration_days }}
+days!

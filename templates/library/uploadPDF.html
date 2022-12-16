@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Upload PDF{% endblock %}
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col col-md-6">
+        <h2>Add PDF details and Upload the file</h2>
+        <form method ='post' enctype ="multipart/form-data">
+            {% csrf_token %}
+            {% crispy form %}
+            
+        </form>
+    </div>
+</div>
+
+{% endblock %}

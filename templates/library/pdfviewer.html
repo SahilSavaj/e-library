@@ -1,0 +1,356 @@
+{% extends "base.html" %}
+{%load static %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{%static 'kurasa.min.css' %}">
+
+<style type="text/css">
+    body{
+        overflow:hidden;
+        background-size:100%100%;
+    }
+    #album{
+        width:600px;
+        height:500px;
+        margin:5%auto;
+    }
+    .full-screen {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.95);
+      }
+      
+     .flex-container-center {
+        displaY: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items:center;
+        width:40vw;
+      } 
+      
+      .full-screen{
+        color: white;
+      }
+      
+      .hidden {
+          display: none;
+      }
+      p{
+        font-size:0.6cm;
+      }
+      h1{
+        font-size:1.6cm;
+        margin-bottom:40px;
+        margin-top:calc(100vh - 99vh);
+        color:#DAA520;
+      }
+      li{
+        font-size:0.6cm;
+      }
+      .list{
+        display:absolute;
+        text-align: left;
+      }
+      .content{
+        margin-left:calc(100vw - 70vw);
+      }
+      .col{
+        align-items:center;
+        margin:auto;
+        width:fit-content;
+      }
+      #prev{
+        background:white;
+        color:black;
+        width:80px;
+        padding:auto;
+        border-radius:10px;
+        border:1px solid white;
+      }
+      #next{
+        background:white;
+        color:black;
+        width:80px;
+        padding:auto;
+        border-radius:10px;
+        border:1px solid white;
+      }
+     #flipbook{
+        display:none ;
+      } 
+      @media only screen and (max-width: 1024px) {
+      }
+      
+</style>
+
+
+
+<div id="container">
+  <div id="flipbook" style="height:100vh;"></div>
+</div>
+
+<!-- DISCLAIMER SECTION -->
+<div class="full-screen hidden flex-container ">
+    <div class="content">
+    <h1>Terms And Conditions</h1>
+    <p>This Pdf/Notes are Provided for absolute free. <br>
+        Don't try to copy/download provided resources by any means..!<br>
+        Pdf's can only be viewed in fullscreen mode.<br>
+        To safe-guard resources we have disabled following features <i class='fas fa-arrow-right' style='font-size:20px'></i>
+        <div class="list">
+            <ul>
+                <li>Ctrl</li>
+                <li>Print screen</li>
+            </ul>
+        </div>
+        
+    </p>
+    <button class="btn btn-warning" onclick="closePopup()">Agree.</button>
+    <button class="btn btn-danger" onclick="cancel()">Disagree.</button>
+</div>
+</div>
+<!-- DISCLAIMER SECTION END -->
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+{% comment %} <script src="../../static/scripts/turn.js"></script> {% endcomment %}
+<script src="{%static 'pdf.js'%}"></script>
+<!--<script type="text/javascript" src="//mozilla.github.io/pdf.js/build/pdf.js"></script>-->
+<script src="https://sdk.amazonaws.com/js/aws-sdk-2.669.0.min.js"></script>
+<reference types="aws-sdk" />
+<script type="text/javascript" src="{%static 'jquery.min.js'%}"></script>
+<script type="text/javascript" src="{%static 'pdf.min.js'%}"></script>
+<script type="text/javascript" src="{%static 'jquery.kurasa.min.js'%}"></script>
+{% comment %} <script src="{%static 'pdfviewer.js'%}"></script> {% endcomment %}
+<script>
+  $(document).ready(function() {
+    var options = {
+      responsive:true,
+      autoFit:true,
+      autoHeight: false,
+      
+      padding:{
+        top:20,
+        left:10,
+        right:10,
+        bottom:70
+      },
+      
+      pdfUrl: '{{path|safe}}',
+      pdfAutoCreatePages: true,
+      pdfBookSizeFromDocument: true,
+      
+      zoom:1,
+      
+      toolbarControls: [
+        // {type:'share',        active:true},
+        // {type:'sound',        active:true, optional: false},
+        // {type:'outline',      active:true},
+        // {type:'thumbnails',   active:true},
+        {type:'gotofirst',    active:true},
+        {type:'prev',         active:true},
+        {type:'pagenumber',   active:true},
+        {type:'next',         active:true},
+        {type:'gotolast',     active:true},
+        // {type:'zoom-in',      active:true, optional: false},
+        // {type:'zoom-out',     active:true, optional: false},
+        // {type:'zoom-default', active:true, optional: false},
+        // {type:'optional',     active:false},
+        // {type:'download',     active:true, optional: false},
+        // {type:'fullscreen',   active:true, optional: false},
+      ],
+      
+      // bookmarks: [
+  
+      // 	{text:'Front Cover', link:'1'},
+  
+      // 	{text:'Malkia', link:'', folded: false, bookmarks:[
+      // 		{text:'#BforBae', link:'2'},
+      // 		{text:'Watoto wa Cheezy Freshi', link:'4'},	
+      // 	]},
+      // 	{text:'Maria Kim', link:'10'},
+      // 	{text:'Celeb', link:'16'},
+      // 	{text:'Hustle Fiti', link:'18'},
+      // 	{text:'My Story', link:'20'},
+      // 	{text:'Okolea Bro', link:'22'},
+      // 	{text:'Back Cover', link:'-1'},
+      // ],
+    };
+    
+    $('#flipbook').kurasa(options);
+    
+    // Events
+    $('#flipbook').on('kurasa:ready', function(e, plugin) {
+      // console.log('event:ready');
+    });
+    
+    $('#flipbook').on('kurasa:showpage', function(e, plugin, page) {
+      // console.log('event:showpage [' + page + ']');
+    });
+    
+    $('#flipbook').on('kurasa:hidepage', function(e, plugin, page) {
+      // console.log('event:hidepage [' + page + ']');
+    });
+  });  
+
+    const popup = document.querySelector('.full-screen');
+    const container=document.getElementById('flipbook')
+    function getUrlVars() { 
+      var vars = {}; 
+      var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) { 
+         vars[key] = value; 
+      });
+      return vars; 
+    }
+    var terms = getUrlVars()["terms"];
+    // let terms = localStorage.getItem("terms"); 
+    console.log(terms)
+    if (terms=='not-agreed'){
+        showPopup()
+        terms="agreed"
+    }
+    
+    function showPopup(){
+    popup.classList.remove('hidden');
+    container.style.display='none ';
+    }
+
+    function closePopup(){
+      container.style.display='block';
+    popup.classList.add('hidden');
+    openFullscreen()
+    var myInterval = setInterval(everyTime, 5000);
+    }
+    
+    var next=document.getElementById('next');
+    var prev=document.getElementById('prev');
+    function everyTime() {
+      if((window.fullScreen) || (window.innerWidth == screen.width && window.innerHeight == screen.height)) {
+          console.log('full')
+          document.onkeydown = function(e) {
+            var str='';
+              switch (e.keyCode) {
+                  case 37:
+                      str = 'Left Key pressed!';
+                      prev.click();
+                      break;
+                  case 39:
+                      str = 'Right Key pressed!';
+                      next.click();
+                      break;
+                }
+            } 
+            document.addEventListener('contextmenu', event => event.preventDefault());
+
+              document.onkeydown = function (e) {
+                
+                // disable F12 key
+                if(e.keyCode == 123 || e.keyCode==121) {
+                  
+                    return false;
+                }
+                if(e.keyCode==39){
+                  next.click();
+                }
+                if(e.keyCode==37){
+                  prev.click();
+                }
+        
+                // disable I key
+                if(e.ctrlKey && e.shiftKey && e.keyCode == 73){
+                    return false;
+                }
+        
+                // disable J key
+                if(e.ctrlKey && e.shiftKey && e.keyCode == 74) {
+                    return false;
+                }
+        
+                // disable U key
+                if(e.ctrlKey && e.keyCode == 85) {
+                    return false;
+                }
+                
+                if (e.ctrlKey && e.key == 'p') {
+                  alert('This section is not allowed to print or export to PDF');
+                  e.cancelBubble = true;
+                  e.preventDefault();
+                  e.stopImmediatePropagation();
+                  return false;
+                }
+                if (e.ctrlKey && e.key == 's') {
+                  alert('This section is not allowed to print or export to PDF or save');
+                  e.cancelBubble = true;
+                  e.preventDefault();
+                  e.stopImmediatePropagation();
+                  return false;
+                }
+            
+                if(e.ctrlKey){
+                 // alert("Ctrl key is Disabled")
+
+                  return false;
+                }
+                //e.keyCode==16 &&
+                if ( e.keyCode==91){
+                  console.log("snip")
+                  e.cancelBubble = true;
+                  e.preventDefault();
+                  e.stopImmediatePropagation();
+                  navigator.clipboard.writeText('');
+                  window.location.href = '/librarylist'
+                  return false;
+                }
+              }
+        }
+        else {
+          console.log('nahh');
+          {% comment %} alert("You will be redirected back for leaving Fullscreen.!") {% endcomment %}
+          cancel()
+          clearInetrval(myInterval);
+          
+          return;
+        }
+    
+    }
+
+    function cancel(){
+      window.location.href="/librarylist";
+    }
+
+    var elem = document.getElementById("page");
+    function openFullscreen() {
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.webkitRequestFullscreen) { /* Safari */
+        elem.webkitRequestFullscreen();
+      } else if (elem.msRequestFullscreen) { /* IE11 */
+        elem.msRequestFullscreen();
+      }
+    }
+    {% comment %} document.onkeydown = function (e) {
+      if (e.keyCode=='27'){
+        window.location.replace("../../librarylist");
+
+      }
+    } {% endcomment %}
+
+    document.onkeydown = function(e) {
+      switch (e.keyCode) {
+          case 37:
+              str = 'Left Key pressed!';
+              console.log(str);
+          case 39:
+              str = 'Right Key pressed!';
+              console.log(str);
+  
+      }
+    }
+
+    
+
+</script>
+{% endblock %}

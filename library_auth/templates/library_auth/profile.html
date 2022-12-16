@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load library_extras %}
+{% block title %}Library Profile{% endblock %}
+{% block content %}
+
+<div class="profile-container">
+    <h1 class="d-flex justify-content-center">User Profile</h1>
+    <div class="row mx-3">
+        <span><div id="fullName">name</div></span>
+    </div>
+    <div class="row mx-3">
+    <span> <div id="email">email</div></span>
+    </div> 
+    <div class="row mx-3">
+    <span><div id="exam">exam</div></span>
+    </div>    
+    <div class="row mx-3">
+    <span><div id="socialmedia">media</div></span>
+    </div>
+</div>
+
+<script>
+    var data="{{request.user.get}}"
+    
+    data=data.split(" ")
+    document.getElementById('fullName').innerHTML=("Name: "+ data[1]+" "+data[2]);
+    document.getElementById('email').innerText="Email: "+data[0];
+    document.getElementById('exam').innerText="Exam: "+data[3];
+    document.getElementById('socialmedia').innerText="Social Media: "+data[4];
+    </script>
+
+<!--<p><a href="{% url "logout" %}">Log Out</a></p>-->
+{% endblock content %}

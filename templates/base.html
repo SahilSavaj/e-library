@@ -1,0 +1,252 @@
+<!doctype html>
+{%load static %}
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>{% block title %}E-Library{% endblock %}</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap');
+      body{
+        background-image: url({%static 'bg.jpg'%});
+        height: 100vh;
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+        
+      }
+      .nav-link{
+        color: #ffffff;
+      }
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+      
+      ::-webkit-scrollbar-track {
+        background-color: transparent;
+        border-radius: 100px;
+      }
+      
+      ::-webkit-scrollbar-thumb {
+        background-color: grey;
+        border-radius: 100px;
+      }
+      .card-title{
+        padding:none;
+        font-weight:bold;
+      }
+      .card{
+        padding-top:10px;
+        width: 14rem;
+        max-width:14rem;
+        background-color:rgba(255,255,255,0.1);
+        color:white;
+      }
+      .row{
+        padding:5px 0;
+      }
+      .form-outline{
+        max-width:300px;
+        margin-left:calc(100vw - 300px);
+      }
+      .profile-container{
+        background-color:rgba(255,255,255,0.2);
+        width:50vw;
+        height:70vh;
+        margin-left:calc(100vw - (50vw + 25vw));
+        margin-top:calc(100vh - (60vh + 30vh));  
+      }
+      h1{
+        font-family: 'Montserrat', sans-serif;
+        padding:20px 0px;
+        font-size:1.2cm;
+      }
+      span{
+        font-family: 'Montserrat', sans-serif;
+        padding:20px 20px;
+        font-size:0.8cm;
+      }
+      html {
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -o-user-select: none;
+        user-select: none;
+      }
+      #page{
+        background-image: url({%static 'bg.jpg'%});
+      }
+      /* The Modal (background) */
+      .modal {
+        display: none; /* Hidden by default */
+        {% comment %} position: absolute; /* Stay in place */ {% endcomment %}
+        z-index: 1; /* Sit on top */
+        padding-top: 100px; /* Location of the box */
+        left: 0;
+        top: 0;
+        margin:auto;
+        {% comment %} max-height: calc(100vh - 200px); {% endcomment %}
+    overflow-y: auto;
+        width: 100%; /* Full width */
+        height:100%;
+        {% comment %} height: 100%; /* Full height */ {% endcomment %}
+        {% comment %} overflow: auto; /* Enable scroll if needed */ {% endcomment %}
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+      }
+    
+      /* Modal Content */
+      .modal-content {
+        background-color: #fefefe;
+        color:Black;
+        margin: auto;
+        padding: 40px;
+        border: 1px solid #888;
+        width: 80%;
+      }
+
+      /* The Close Button */
+      .close {
+        color: #aaaaaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+      }
+
+      .close:hover,
+      .close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+      }
+      @media print {
+        html, body {
+           display: none;  /* hide whole page */
+        }
+      }
+    </style>
+  </head>
+  <!-- oncontextmenu="return false;"-->
+  <body >
+    <div id="page" class="bg-image shadow-2-strong" >
+      <div class="mask" style="background-color: rgba(0, 0, 0, 0.8); height: 100vh; overflow: auto;">
+          <div class="text-white">
+            <nav class="navbar navbar-expand{-lg} navbar-dark ">
+              <div class="container-fluid">
+                <a class="navbar-brand mb-0 h1" href="/">
+                  {% load static %}
+                  <img src="{% static 'logo.png' %}" width="30" height="30" alt="" class="d-inline-block align-text-top">
+                  Library
+                </a>
+                  <div class="d-flex">
+                      <a class="nav-link" href="/">Home</a>
+                      
+                      <!-- Mihir Yaha Contact us k maine changes kiye hai vo vaise hi rehne de-->
+
+                      {% if request.user.is_active %}
+                        <a class="nav-link" href="{% url "librarylist" %}" onclick='renderPdf()'>library</a>
+                        <a class="nav-link" href="{% url "contact" %}">Contact Us</a>
+                        {% if request.user.is_staff %}
+                              <a class="nav-link" href="{% url "upload" %}">Upload</a>
+                        {% endif %}
+                        <a class="nav-link" href="{% url "profile" %}">Profile</a>
+                        <a class="nav-link" href="{% url "logout" %}">Log Out</a>
+                      {% else %}
+                      <a class="nav-link" href="{% url "contact" %}">Contact Us</a>
+                        <a class="nav-link" href="{% url "django_registration_register" %}">Register</a>
+                        <a class="nav-link" href="{% url "login" %}">Log In</a>
+                      {% endif %}
+                  </div>
+              </div>
+          </nav>
+          
+        <div class="container-fluid">
+          {% block content %}
+      
+          {% endblock %}
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/b0f29e9bfe.js" crossorigin="anonymous"></script>
+    <!--<script src="../../static/scripts/librarySearch.js"></script>-->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-92P01DQL7X"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-92P01DQL7X');
+    </script>
+    <script>
+      document.addEventListener('contextmenu', event => event.preventDefault());
+
+      document.onkeydown = function (e) {
+ 
+        // disable F12 key
+        if(e.keyCode == 123 || e.keyCode==121) {
+          
+            return false;
+        }
+ 
+        // disable I key
+        if(e.ctrlKey && e.shiftKey && e.keyCode == 73){
+            return false;
+        }
+ 
+        // disable J key
+        if(e.ctrlKey && e.shiftKey && e.keyCode == 74) {
+            return false;
+        }
+ 
+        // disable U key
+        if(e.ctrlKey && e.keyCode == 85) {
+            return false;
+        }
+        
+        if (e.ctrlKey && e.key == 'p') {
+          alert('This section is not allowed to print or export to PDF');
+          e.cancelBubble = true;
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          return false;
+        }
+        if (e.ctrlKey && e.key == 's') {
+          alert('This section is not allowed to print or export to PDF or save');
+          e.cancelBubble = true;
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          return false;
+        }
+    
+        if(e.ctrlKey){
+          {% comment %} alert("Ctrl key is Disabled") {% endcomment %}
+
+          return false;
+        }
+        //e.keyCode==16 &&
+        if ( e.keyCode==91){
+          console.log("snip")
+          e.cancelBubble = true;
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          navigator.clipboard.writeText('');
+          window.location.href = '/librarylist'
+          return false;
+        }
+      }
+        document.addEventListener('keyup', (e) => {
+          if (e.key == 'PrintScreen') {
+              navigator.clipboard.writeText('');
+              alert('Screenshots disabled!');
+              
+          }   
+        });
+
+    </script>
+  </body>
+</html>

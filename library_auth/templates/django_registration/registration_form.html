@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags library_extras %}
+{%load static%}
+{% block title %}Register for Library{% endblock %}
+{% block content %}
+{% row "justify-content-center" %}
+{% col "col-md-6" %}
+<h2>Register for Library</h2>
+<div id="myModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <p>Some text in the Modal..</p>
+    </div>
+  
+  </div>
+{% crispy form %}
+<input type="checkbox" class="checkbox" value="false" onclick="document.getElementsByClassName('checkbox').value=true" required> I Agree to <a href="{%static 'tnc.html'%}">Terms and conditions</a>.</input>
+{% comment %} <button type="submit" onclick="test()">Submit</button> {% endcomment %}
+{% endcol %}
+{% endrow %}
+<script>
+    
+    {% comment %} // Get the button that opens the modal
+    var btn = document.getElementById("myBtn");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    function test(){
+        if(document.getElementsByClassName('checkbox').value!==true){
+            console.log("Not check")
+        }
+        else{
+        window.location.replace('/')
+    }
+    }
+    var modal = document.getElementById("myModal"); {% endcomment %}
+
+        
+
+        // When the user clicks the button, open the modal 
+        {% comment %} btn.onclick = function() {
+        modal.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+        modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+        } {% endcomment %}
+
+    {% comment %} console.log(document.getElementsByClassName('checkbox').value) {% endcomment %}
+</script>
+{% endblock %}
